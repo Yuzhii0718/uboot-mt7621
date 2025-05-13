@@ -27,16 +27,11 @@ on:
         required: true
         type: string
         default: '0x140000'
-      reset_pin:
-        description: 'Reset Button GPIO'
+      gpio_config:
+        description: 'GPIO配置 (格式: reset_pin,sysled_pin)'
         required: true
-        type: number
-        default: 18
-      sysled_pin:
-        description: 'System LED GPIO'
-        required: true
-        type: number
-        default: 3
+        type: string
+        default: '18,3'
       cpufreq:
         description: 'CPU Frequency (400 - 1200)'
         required: true
@@ -115,8 +110,12 @@ jobs:
       - name: Compile
         working-directory: uboot-mt7621
         run: |
-          ./customize.sh '${{ inputs.flash }}' '${{ inputs.mtdparts }}' '${{ inputs.kernel_offset }}' '${{ inputs.reset_pin }}' \
-            '${{ inputs.sysled_pin }}' '${{ inputs.cpufreq }}' '${{ inputs.ramfreq }}' '${{ inputs.ddrparam }}' '${{ inputs.baudrate }}'
+          # 解析GPIO配置
+          IFS=',' read -r reset_pin sysled_pin <<< "${{ inputs.gpio_config }}"
+          
+          ./customize.sh '${{ inputs.flash }}' '${{ inputs.mtdparts }}' '${{ inputs.kernel_offset }}' \
+            "${reset_pin}" "${sysled_pin}" '${{ inputs.cpufreq }}' '${{ inputs.ramfreq }}' \
+            '${{ inputs.ddrparam }}' '${{ inputs.baudrate }}'
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
