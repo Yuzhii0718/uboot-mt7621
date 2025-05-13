@@ -107,15 +107,18 @@ jobs:
         working-directory: uboot-mt7621
         run: sed -i 's/0x0C000000/0x0A000000/g' ./arch/mips/mach-mt7621/dramc-legacy/dramc.S
 
+      - name: Parse GPIO config
+        id: gpio
+        run: |
+          IFS=',' read -r reset_pin sysled_pin <<< "${{ inputs.gpio_config }}"
+          echo "reset_pin=$reset_pin" >> $GITHUB_OUTPUT
+          echo "sysled_pin=$sysled_pin" >> $GITHUB_OUTPUT
+
       - name: Compile
         working-directory: uboot-mt7621
         run: |
-          # 解析GPIO配置
-          IFS=',' read -r reset_pin sysled_pin <<< "${{ inputs.gpio_config }}"
-          
-          ./customize.sh '${{ inputs.flash }}' '${{ inputs.mtdparts }}' '${{ inputs.kernel_offset }}' \
-            "${reset_pin}" "${sysled_pin}" '${{ inputs.cpufreq }}' '${{ inputs.ramfreq }}' \
-            '${{ inputs.ddrparam }}' '${{ inputs.baudrate }}'
+          ./customize.sh '${{ inputs.flash }}' '${{ inputs.mtdparts }}' '${{ inputs.kernel_offset }}' '${{ steps.gpio.outputs.reset_pin }}' \
+            '${{ steps.gpio.outputs.sysled_pin }}' '${{ inputs.cpufreq }}' '${{ inputs.ramfreq }}' '${{ inputs.ddrparam }}' '${{ inputs.baudrate }}'
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
@@ -139,14 +142,13 @@ jobs:
         with:
           name: ${{ inputs.model }}-${{ steps.timestamp.outputs.now }}
           body: |
-
             ## 构建参数
             - 设备型号: ${{ inputs.model }}
             - 闪存类型: ${{ inputs.flash }}
             - 分区表: ${{ inputs.mtdparts }}
             - 内核加载地址: ${{ inputs.kernel_offset }}
-            - 复位按钮GPIO: ${{ inputs.gpio_config.split(',')[0] }}
-            - 系统指示灯GPIO: ${{ inputs.gpio_config.split(',')[1] }}
+            - 复位按钮GPIO: ${{ steps.gpio.outputs.reset_pin }}
+            - 系统指示灯GPIO: ${{ steps.gpio.outputs.sysled_pin }}
             - CPU频率: ${{ inputs.cpufreq }} MHz
             - 内存频率: ${{ inputs.ramfreq }} MHz
             - DDR初始化参数: ${{ inputs.ddrparam }}
