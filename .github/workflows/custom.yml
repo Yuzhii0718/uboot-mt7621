@@ -28,7 +28,7 @@ on:
         type: string
         default: '0x140000'
       gpio_config:
-        description: 'GPIO配置 (格式: reset_pin,sysled_pin)'
+        description: 'GPIO 配置 (格式: reset_pin,sysled_pin)'
         required: true
         type: string
         default: '18,3'
@@ -120,12 +120,18 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.model }}-${{ steps.timestamp.outputs.now }}-uboot
+          name: ${{ inputs.model }}-uboot
           path: "uboot-mt7621/archive/"
+      
       - name: Generate timestamp
         id: timestamp
         run: echo "now=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
-  
+
+      - name: rename uboot-mt7621
+        run: |
+          mv uboot-mt7621/archive/u-boot-mt7621.bin uboot-mt7621/archive/${{ inputs.model }}-${{ steps.timestamp.outputs.now }}_u-boot-mt7621.bin
+          mv uboot-mt7621/archive/u-boot.img uboot-mt7621/archive/${{ inputs.model }}-${{ steps.timestamp.outputs.now }}_u-boot.img
+
       - name: Create Release
         uses: softprops/action-gh-release@v1
         env:
@@ -133,8 +139,7 @@ jobs:
         with:
           name: ${{ inputs.model }}-${{ steps.timestamp.outputs.now }}
           body: |
-            # U-Boot 自定义构建 (${{ steps.timestamp.outputs.now }})
-            
+
             ## 构建参数
             - 设备型号: ${{ inputs.model }}
             - 闪存类型: ${{ inputs.flash }}
