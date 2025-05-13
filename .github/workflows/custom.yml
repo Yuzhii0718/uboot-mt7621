@@ -8,29 +8,30 @@ on:
         required: true
         type: choice
         options:
-        - 'NOR'
         - 'NAND'
         - 'NAND-NMBM'
+        - 'NOR'
+        default: 'NAND'
       mtdparts:
         description: 'MTD Partition Table'
         required: true
         type: string
-        default: '192k(u-boot),64k(u-boot-env),64k(factory),-(firmware)'
+        default: '512k(u-boot),512k(u-boot-env),256k(factory),-(firmware)'
       kernel_offset:
         description: 'Kernel Load Address'
         required: true
         type: string
-        default: '0x50000'
+        default: '0x140000'
       reset_pin:
         description: 'Reset Button GPIO'
         required: true
         type: number
-        default: -1
+        default: 18
       sysled_pin:
         description: 'System LED GPIO'
         required: true
         type: number
-        default: -1
+        default: 3
       cpufreq:
         description: 'CPU Frequency (400 - 1200)'
         required: true
@@ -45,7 +46,7 @@ on:
         - '800'
         - '1066'
         - '1200'
-        default: '800'
+        default: '1200'
       ddrparam:
         description: 'Prefered DDR Init Parameters'
         required: true
@@ -60,6 +61,7 @@ on:
         - 'DDR3-256MiB'
         - 'DDR3-512MiB'
         - 'DDR3-128MiB-KGD'
+        default: 'DDR3-256MiB'
       oldparam:
         description: 'Use Old DDR Timing Parameters'
         required: true
@@ -76,7 +78,7 @@ on:
 jobs:
   build:
     name: Build MT7621 u-boot
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-2204
     strategy:
        fail-fast: False
 
