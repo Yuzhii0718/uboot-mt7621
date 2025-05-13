@@ -54,13 +54,13 @@ cmd_as_o_html = $(CC) $(a_flags) -c -o $@ \
         $(src)/embed.S
 
 $(obj)/%.o: $(src)/%.html FORCE
-    $(call cmd,force_checksrc)
-    $(call if_changed_dep,as_o_html)
+	$(call cmd,force_checksrc)
+	$(call if_changed_dep,as_o_html)
 
 $(obj)/%.o: $(src)/%.css FORCE
-    $(call cmd,force_checksrc)
-    $(call if_changed_dep,as_o_html)
+	$(call cmd,force_checksrc)
+	$(call if_changed_dep,as_o_html)
 
 $(obj)/%.o: $(src)/%.js FORCE
-    $(call cmd,force_checksrc)
-    $(call if_changed_dep,as_o_html)
+	$(call cmd,force_checksrc)
+	$(call if_changed_dep,as_o_html)
