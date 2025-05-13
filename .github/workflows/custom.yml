@@ -145,8 +145,8 @@ jobs:
             - 闪存类型: ${{ inputs.flash }}
             - 分区表: ${{ inputs.mtdparts }}
             - 内核加载地址: ${{ inputs.kernel_offset }}
-            - 复位按钮GPIO: ${{ inputs.reset_pin }}
-            - 系统LED GPIO: ${{ inputs.sysled_pin }}
+            - 复位按钮GPIO: ${{ inputs.gpio_config.split(',')[0] }}
+            - 系统指示灯GPIO: ${{ inputs.gpio_config.split(',')[1] }}
             - CPU频率: ${{ inputs.cpufreq }} MHz
             - 内存频率: ${{ inputs.ramfreq }} MHz
             - DDR初始化参数: ${{ inputs.ddrparam }}
