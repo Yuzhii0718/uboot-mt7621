@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Flashing - MediaTek System Recovery Mode</title>
-	<link rel="stylesheet" type="text/css" href="/style.css">
+    <title>Flashing - MediaTek System Recovery Mode</title>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <script src="/script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 </head>
 <body>
-	<div id="banner">
-		MediaTek U-Boot System Recovery Mode
-	</div>
-	<div id="main">
-		<p>Upgrading is in progressing, please wait ...</p>
-		<p>This page may be in not responding status for a short time.</p>
-	</div>
-	<script type="text/javascript">
-		var interval = window.setInterval(function () {
-			var xmlhttp = new XMLHttpRequest();
+    <div class="controls">
+        <div class="select-container">
+            <select id="language-selector">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+            </select>
+        </div>
+        <div class="select-container">
+            <select id="theme-selector">
+                <option value="auto" data-i18n="theme_auto">Auto</option>
+                <option value="light" data-i18n="theme_light">Light</option>
+                <option value="dark" data-i18n="theme_dark">Dark</option>
+            </select>
+        </div>
+    </div>
+    <div id="banner" data-i18n="banner">
+        MediaTek U-Boot System Recovery Mode
+    </div>
+    <div id="main">
+        <p data-i18n="upgrading">Upgrading is in progressing, please wait ...</p>
+        <p data-i18n="page_status">This page may be in not responding status for a short time.</p>
+    </div>
+    <script type="text/javascript">
+        var interval = window.setInterval(function () {
+            var xmlhttp = new XMLHttpRequest();
 
-			window.clearInterval(interval);
+            window.clearInterval(interval);
 
-			xmlhttp.timeout = 300000;
-			xmlhttp.open("GET", "/result", true);
-			xmlhttp.send();
-			xmlhttp.onreadystatechange = function () {
-				if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-					document.getElementById("main").innerHTML = xmlhttp.responseText;
-				}
-			}
-		}, 1000);
-	</script>
+            xmlhttp.timeout = 300000;
+            xmlhttp.open("GET", "/result", true);
+            xmlhttp.send();
+            xmlhttp.onreadystatechange = function () {
+                if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                    document.getElementById("main").innerHTML = xmlhttp.responseText;
+                    // 重新应用语言翻译
+                    if (typeof applyLanguage === 'function') {
+                        applyLanguage();
+                    }
+                }
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
