@@ -4,12 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       model:
-        description: 'Device Model'
+        description: '设备型号'
         required: true
         type: string
         default: 'ZTE_E8820S'
       flash:
-        description: 'Flash Type'
+        description: 'Flash 类型'
         required: true
         type: choice
         options:
@@ -18,7 +18,7 @@ on:
         - 'NOR'
         default: 'NAND'
       mtdparts:
-        description: 'MTD Partition Table'
+        description: 'MTD 分区表'
         required: true
         type: string
         default: '512k(u-boot),512k(u-boot-env),256k(factory),-(firmware)'
@@ -33,12 +33,12 @@ on:
         type: string
         default: '18,3'
       cpufreq:
-        description: 'CPU Frequency (400 - 1200)'
+        description: 'CPU 频率 (400 - 1200)'
         required: true
         type: number
         default: '880'
       ramfreq:
-        description: 'DRAM Frequency'
+        description: 'DRAM 频率'
         required: true
         type: choice
         options:
@@ -48,7 +48,7 @@ on:
         - '1200'
         default: '1200'
       ddrparam:
-        description: 'Prefered DDR Init Parameters'
+        description: '首选DDR初始化参数'
         required: true
         type: choice
         options:
@@ -63,12 +63,12 @@ on:
         - 'DDR3-128MiB-KGD'
         default: 'DDR3-256MiB'
       oldparam:
-        description: 'Use Old DDR Timing Parameters'
+        description: '使用旧DDR时序参数'
         required: true
         type: boolean
         default: 'false'
       baudrate:
-        description: 'Baud Rate'
+        description: '波特率'
         required: true
         type: choice
         options:
