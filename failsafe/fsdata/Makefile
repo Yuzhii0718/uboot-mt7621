@@ -42,21 +42,25 @@ strip_path = $(subst /,_,$(subst -,_,$(subst .,_,$(1))))
 
 quiet_cmd_as_o_html = AS      $@
 cmd_as_o_html = $(CC) $(a_flags) -c -o $@ \
-		-DDATA_SECT_NAME="\".rodata.fsdata.$(call strip_path,$(FSPATH_$(@F)))\"" \
-		-DDATA_OBJ_FILE="\"$(obj)/$(FILE_$(@F))\"" \
-		-DDATA_OBJ_NAME="fsdata_$(call strip_path,$(FSPATH_$(@F)))" \
-		-DDATA_SIZE_NAME="fsdata_size_$(call strip_path,$(FSPATH_$(@F)))" \
-		-DDATA_SECT_FSPATH_NAME="\".rodata.fsdata.path.$(call strip_path,$(FSPATH_$(@F)))\"" \
-		-DDATA_OBJ_FSPATH_NAME="fsdata_path_$(call strip_path,$(FSPATH_$(@F)))" \
-		-DDATA_OBJ_FSPATH="\"$(FSPATH_$(@F))\"" \
-		-DUBOOT_LIST_SECT_NAME="\".u_boot_list_2_fs_2_$(call strip_path,$(FSPATH_$(@F)))\"" \
-		-DUBOOT_LIST_NAME="fsdata_ulist_$(call strip_path,$(FSPATH_$(@F)))" \
-		$(src)/embed.S
+        -DDATA_SECT_NAME="\".rodata.fsdata.$(call strip_path,$(FSPATH_$(@F)))\"" \
+        -DDATA_OBJ_FILE="\"$(obj)/$(FILE_$(@F))\"" \
+        -DDATA_OBJ_NAME="fsdata_$(call strip_path,$(FSPATH_$(@F)))" \
+        -DDATA_SIZE_NAME="fsdata_size_$(call strip_path,$(FSPATH_$(@F)))" \
+        -DDATA_SECT_FSPATH_NAME="\".rodata.fsdata.path.$(call strip_path,$(FSPATH_$(@F)))\"" \
+        -DDATA_OBJ_FSPATH_NAME="fsdata_path_$(call strip_path,$(FSPATH_$(@F)))" \
+        -DDATA_OBJ_FSPATH="\"$(FSPATH_$(@F))\"" \
+        -DUBOOT_LIST_SECT_NAME="\".u_boot_list_2_fs_2_$(call strip_path,$(FSPATH_$(@F)))\"" \
+        -DUBOOT_LIST_NAME="fsdata_ulist_$(call strip_path,$(FSPATH_$(@F)))" \
+        $(src)/embed.S
 
 $(obj)/%.o: $(src)/%.html FORCE
-	$(call cmd,force_checksrc)
-	$(call if_changed_dep,as_o_html)
+    $(call cmd,force_checksrc)
+    $(call if_changed_dep,as_o_html)
 
 $(obj)/%.o: $(src)/%.css FORCE
-	$(call cmd,force_checksrc)
-	$(call if_changed_dep,as_o_html)
+    $(call cmd,force_checksrc)
+    $(call if_changed_dep,as_o_html)
+
+$(obj)/%.o: $(src)/%.js FORCE
+    $(call cmd,force_checksrc)
+    $(call if_changed_dep,as_o_html)
