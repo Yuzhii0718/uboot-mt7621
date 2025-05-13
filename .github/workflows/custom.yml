@@ -3,6 +3,11 @@ name: Build customized u-boot
 on:
   workflow_dispatch:
     inputs:
+      model:
+        description: 'Device Model'
+        required: true
+        type: string
+        default: 'ZTE_E8820S'
       flash:
         description: 'Flash Type'
         required: true
@@ -74,6 +79,7 @@ on:
         options:
         - '57600'
         - '115200'
+        default: '57600'
 
 jobs:
   build:
@@ -115,5 +121,32 @@ jobs:
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
-          name: u-boot
+          name: ${{ inputs.model }}-${{ steps.timestamp.outputs.now }}-uboot
           path: "uboot-mt7621/archive/"
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "now=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_OUTPUT
+  
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          name: ${{ inputs.model }}-${{ steps.timestamp.outputs.now }}
+          body: |
+            # U-Boot 自定义构建 (${{ steps.timestamp.outputs.now }})
+            
+            ## 构建参数
+            - 设备型号: ${{ inputs.model }}
+            - 闪存类型: ${{ inputs.flash }}
+            - 分区表: ${{ inputs.mtdparts }}
+            - 内核加载地址: ${{ inputs.kernel_offset }}
+            - 复位按钮GPIO: ${{ inputs.reset_pin }}
+            - 系统LED GPIO: ${{ inputs.sysled_pin }}
+            - CPU频率: ${{ inputs.cpufreq }} MHz
+            - 内存频率: ${{ inputs.ramfreq }} MHz
+            - DDR初始化参数: ${{ inputs.ddrparam }}
+            - 使用旧DDR参数: ${{ inputs.oldparam }}
+            - 波特率: ${{ inputs.baudrate }}
+          files: uboot-mt7621/archive/*
+          tag_name: ${{ inputs.model }}-${{ steps.timestamp.outputs.now }}
