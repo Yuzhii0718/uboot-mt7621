@@ -1,5 +1,5 @@
 # MediaTek MT7621 U-Boot with Failsafe Mode
-![Web Recovery Page](WebRecovery.jpg)
+![Web Recovery Page](WebRecovery.png)
 
 ## Online Build
 
