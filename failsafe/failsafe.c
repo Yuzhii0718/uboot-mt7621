@@ -241,6 +241,16 @@ static void style_handler(enum httpd_uri_handler_status status,
 	}
 }
 
+static void script_handler(enum httpd_uri_handler_status status,
+	struct httpd_request *request,
+	struct httpd_response *response)
+{
+	if (status == HTTP_CB_NEW) {
+		output_plain_file(response, "script.js");
+		response->info.content_type = "application/javascript";
+	}
+}
+
 static void not_found_handler(enum httpd_uri_handler_status status,
 	struct httpd_request *request,
 	struct httpd_response *response)
